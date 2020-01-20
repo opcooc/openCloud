@@ -1,0 +1,56 @@
+server:
+    port: 8211
+spring:
+    application:
+        name: ${artifactId}
+    cloud:
+        #手动配置Bus id,
+        bus:
+            id: ${spring.application.name}:${server.port}
+        nacos:
+            config:
+                namespace: ${config.namespace}
+                refreshable-dataids: common.properties
+                server-addr: ${config.server-addr}
+                shared-dataids: common.properties,db.properties,redis.properties,rabbitmq.properties
+            discovery:
+                namespace: ${config.namespace}
+                server-addr: ${discovery.server-addr}
+    main:
+        allow-bean-definition-overriding: true
+    # 解决restful 404错误 spring.mvc.throw-exception-if-no-handler-found=true spring.resources.add-mappings=false
+    mvc:
+        throw-exception-if-no-handler-found: true
+    resources:
+        add-mappings: false
+    profiles:
+        active: ${profile.name}
+    thymeleaf:
+        cache: false
+        encoding: UTF-8
+        mode: HTML
+        prefix: classpath:/templates/
+        suffix: .html
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: '*'
+
+cloud:
+    swagger2:
+        enabled: true
+        description: 后台管理服务器
+        title: 后台管理服务器
+    social:
+         client:
+             admin:
+                  client-id: 7gBZcbsC7kLIWCdELIl8nxcs
+                  client-secret: 0osTIhce7uPvDKHz6aa67bhCukaKoYl4
+
+#mybatis plus 设置
+mybatis-plus:
+ #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.opencloud.uaa.admin.server.**.entity
+  mapper-locations: classpath:mapper/*.xml
